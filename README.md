@@ -1,6 +1,6 @@
 ```markdown
 # 🏭 KNN Industry Classifier for Chinese A-Share Market
-
+```
 > 基于 Hadoop MapReduce 的 K 近邻行业分类系统，对沪深 A 股 5000+ 上市公司进行行业归类，附带完整的数据采集、可视化流程。
 
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
@@ -22,43 +22,59 @@
 
 ## 🏗 系统架构
 
-graph TD
-    A[东方财富API / AKShare / Python爬虫] -->|财务报表原始数据| B(特征工程)
-    B --> C[27维财务指标: ROE, ROA, 毛利率, 净利率, 营收增长率...]
-    C --> D[MapReduce KNN Classifier]
-    D --> E[Mapper]
-    D --> F[Shuffle]
-    D --> G[Reducer]
-    E --> H[距离计算]
-    F --> I[排序分组]
-    G --> J[K近邻投票 + 置信度]
-    J --> K[可视化]
-    K --> L[散点图]
-    K --> M[行业分布]
-    K --> N[置信度直方图]
-    K --> O[综合仪表盘]
+```
+┌────────────────────────────────────────────────────────────┐
+│                      Data Pipeline                         │
+├───────────┬───────────┬──────────────┬─────────────────────┤
+│ 东方财富API│  AKShare  │  Python 爬虫 │  财务报表原始数据     │
+└─────┬─────┴─────┬─────┴──────┬───────┴──────────┬──────────┘
+      │           │            │                  │
+      ▼           ▼            ▼                  ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    Feature Engineering                      │
+│  27维财务指标：ROE, ROA, 毛利率, 净利率, 营收增长率...         │
+└────────────────────────┬────────────────────────────────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────────────┐
+│              Hadoop MapReduce KNN Classifier                │
+│  ┌──────────┐    ┌───────────┐    ┌────────────────────┐   │
+│  │  Mapper  │──▶│  Shuffle  │──▶│     Reducer        │   │
+│  │ 距离计算  │    │  排序分组 │    │  K近邻投票 + 置信度  │   │
+│  └──────────┘    └───────────┘    └────────────────────┘   │
+└────────────────────────┬────────────────────────────────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────────────┐
+│                     Visualization                           │
+│  散点图 | 行业分布 | 置信度直方图 | 综合仪表盘                 │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ---
 
 ## 📂 项目结构
 
-- industry_predictions/
-  - code/
-    - astock_raw_capture.py     # 数据采集：爬取东方财富A股无行业财务三表并进行特征工程
-    - sh_capture.py             # 数据采集：爬取东方财富沪市财务三表并进行特征工程
-    - z-score.py                # 数据标准化：Z-score 归一化
-    - IndustryKNN.java          # Hadoop MapReduce KNN 分类器
-    - visualize.py              # 结果可视化：matplotlib 图表
-  - src/
-    - train_standardized.csv    # 训练集（沪市）
-    - test_standardized.csv     # 测试集（全A股）
-    - astock_raw_features.csv   # 可信度统计图表
-    - sh_features.csv           # 可信度散点分布
-  - res/
-    - result.csv                # MapReduce 输出结果
-    - scatter_plot.png          # 可信度散点分布
-    - dashboard.png             # 可信度统计图表
-  - README.md
+```
+.
+
+├── code/
+│   ├── astock_raw_capture.py        # 数据采集：爬取东方财富A股无行业财务三表并进行特征工程
+│   ├── sh_capture.py                # 数据采集：爬取东方财富沪市财务三表并进行特征工程
+│   ├── z-score.py                   # 数据标准化：Z-score 归一化
+│   ├── IndustryKNN.java             # Hadoop MapReduce KNN 分类器
+│   └── visualize.py                 # 结果可视化：matplotlib 图表   
+├── src/
+│   ├── train_standardized.csv       # 训练集（沪市）
+│   ├── test_standardized.csv        # 测试集（全A股）
+│   ├── astock_raw_features.csv      # 可信度统计图表
+│   └── sh_features.csv              # 可信度散点分布
+├── res/
+│   ├── result.csv                   # MapReduce 输出结果
+│   ├── scatter_plot.png             # 可信度散点分布
+│   └── dashboard.png                # 可信度统计图表
+└── README.md
+```
 
 ---
 
