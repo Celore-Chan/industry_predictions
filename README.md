@@ -1,5 +1,5 @@
 ```markdown
-# 🏭 KNN Industry Classifier for Chinese A-Share Market
+🏭 KNN Industry Classifier for Chinese A-Share Market
 ```
 > 基于 Hadoop MapReduce 的 K 近邻行业分类系统，对沪深 A 股 5000+ 上市公司进行行业归类，附带完整的数据采集、可视化流程。
 
