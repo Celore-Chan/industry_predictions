@@ -1,0 +1,2 @@
+# industry_predictions
+在hadoop的MapReduce下，基于K邻近算法，根据企业财务特征值对企业进行行业预测
